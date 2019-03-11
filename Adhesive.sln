@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adhesive", "Adhesive\Adhesive.csproj", "{533F62F1-963F-425D-89E9-A2E3B211FD25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adhesive.Sample", "Adhesive.Sample\Adhesive.Sample.csproj", "{AE0EB9D2-46C4-4C05-9232-939D7C92707F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{533F62F1-963F-425D-89E9-A2E3B211FD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{533F62F1-963F-425D-89E9-A2E3B211FD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{533F62F1-963F-425D-89E9-A2E3B211FD25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE0EB9D2-46C4-4C05-9232-939D7C92707F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE0EB9D2-46C4-4C05-9232-939D7C92707F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE0EB9D2-46C4-4C05-9232-939D7C92707F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE0EB9D2-46C4-4C05-9232-939D7C92707F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
