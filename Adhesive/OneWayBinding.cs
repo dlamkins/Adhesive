@@ -14,12 +14,30 @@ namespace Adhesive {
 
         private PropertyInfo _targetProperty;
         private PropertyInfo _sourceProperty;
-
-
+        
         private bool _enabled;
         public override bool Enabled => _enabled;
 
+        private MultiWayBinding _parentBinding;
+        public MultiWayBinding ParentBinding => _parentBinding;
+
+        public bool IsMemberOfMultiWayBinding => _parentBinding != null;
+
+        public OneWayBinding(MultiWayBinding parentBinding, Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<object, TTargetMember> valueConverter, bool applyLeft) {
+            _parentBinding = parentBinding;
+
+            BuildBinding(bindTarget, bindSource, valueConverter, applyLeft);
+        }
+
         public OneWayBinding(Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<object, TTargetMember> valueConverter = null, bool applyLeft = false) {
+            BuildBinding(bindTarget, bindSource, valueConverter, applyLeft);
+        }
+
+        internal void DisconnectParentBinding() {
+            _parentBinding = null;
+        }
+
+        private void BuildBinding(Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<object, TTargetMember> valueConverter, bool applyLeft) {
             _targetReference = bindTarget.Body as MemberExpression;
             _sourceReference = bindSource.Body as MemberExpression;
 
@@ -36,8 +54,8 @@ namespace Adhesive {
             if (_sourceInstance == null)
                 throw new ArgumentException($"{nameof(bindSource)} must be the member of an instance that implements {nameof(INotifyPropertyChanged)}.");
             
-            _targetProperty = BindManager.GetBindEndpoint(_targetInstance).GetCachedMember(_targetReference.Member);
-            _sourceProperty = BindManager.GetBindEndpoint(_sourceInstance).AttachBinding(_sourceReference.Member, this);
+            _targetProperty = BindManager.GetBindEndpoint(_targetInstance).GetMemberAsTarget(_targetReference.Member, this);
+            _sourceProperty = BindManager.GetBindEndpoint(_sourceInstance).GetMemberAsSource(_sourceReference.Member, this);
 
             if (valueConverter == null) {
                 // Default just directly applies the value of bindSource to bindTarget

@@ -61,23 +61,36 @@ namespace Adhesive.Sample {
                                                                           updateDisplayname
                                                                          );
 
+            List<Expression<Func<string>>> exampleTargets = new List<Expression<Func<string>>>();
+
+            exampleTargets.Add(() => notifyingTextBox1.Text);
+            exampleTargets.Add(() => notifyingTextBox2.Text);
+
+            var extraBinding = new OneToManyBinding<string, string>(
+                exampleTargets,
+                () => sampleAdhesive.displayNameTextBox.Text,
+                applyLeft: true);
+
             //_adhesiveBindings.Add(firstNameBinding);
             //_adhesiveBindings.Add(lastNameBinding);
         }
 
         private void SetupWinBindings() {
             var firstNameBinding = sampleWinForms.displayNameTextBox.DataBindings.Add(
-                                                                                         "Text", 
+                                                                                         "Text",
                                                                                          sampleWinForms,
-                                                                                         "CombinedBindMountPoint", 
-                                                                                         true, 
+                                                                                         "CombinedBindMountPoint",
+                                                                                         true,
                                                                                          DataSourceUpdateMode.OnPropertyChanged
                                                                                          );
             firstNameBinding.Format += delegate(object sender, ConvertEventArgs args) { args.Value = $"{sampleWinForms.lastNameTextBox.Text}, {sampleWinForms.firstNameTextBox.Text}"; };
         }
 
         private void SetupPraeclarum() {
-            Libraries.Praeclarum.Bind.Binding.Create(() => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text);
+            Libraries.Praeclarum.Bind.Binding.Create(
+                () => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text &&
+                      notifyingTextBox1.Text == samplePraeclarum.displayNameTextBox.Text &&
+                      notifyingTextBox2.Text == samplePraeclarum.displayNameTextBox.Text);
         }
 
         private void SetupOnUpdate() {
@@ -197,17 +210,6 @@ namespace Adhesive.Sample {
             timer.Stop();
             return timer.ElapsedMilliseconds;
         }
-
-        private void button1_Click(object sender, EventArgs e) {
-            var owBinding = new TwoWayBinding<string, string>(
-                                                                       () => notifyingTextBox1.Text,
-                                                                       () => notifyingTextBox2.Text,
-                                                                       (o) => $"{notifyingTextBox2.Text.ToUpper()}",
-                                                                       (o) => $"{notifyingTextBox1.Text.ToLower()}"
-                                                                       //(tb2) => ((NotifyingTextBox)tb2).Text.ToUpper()
-                                                                      );
-            
-        }
-
+        
     }
 }

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 
 namespace Adhesive {
-    public class TwoWayBinding<TLeftMember, TRightMember> : Binding {
+    public class TwoWayBinding<TLeftMember, TRightMember> : MultiWayBinding {
 
         public OneWayBinding<TLeftMember, TRightMember> LeftBinding { get; }
         public OneWayBinding<TRightMember, TLeftMember> RightBinding { get; }
@@ -14,18 +14,22 @@ namespace Adhesive {
 
         public TwoWayBinding(Expression<Func<TLeftMember>> leftTarget, Expression<Func<TRightMember>> rightTarget, Func<object, TLeftMember> leftValueConverter = null, Func<object, TRightMember> rightValueConverter = null, InitialBindingProcedure setupProcedure = InitialBindingProcedure.ApplyLeft) {
             this.LeftBinding = new OneWayBinding<TLeftMember, TRightMember>(
-                                                                            leftTarget,
-                                                                            rightTarget,
-                                                                            leftValueConverter,
-                                                                            setupProcedure == InitialBindingProcedure.ApplyLeft
-                                                                            );
+                this,
+                leftTarget,
+                rightTarget,
+                leftValueConverter,
+                setupProcedure == InitialBindingProcedure.ApplyLeft
+            );
+            this.Bindings.Add(this.LeftBinding);
 
             this.RightBinding = new OneWayBinding<TRightMember, TLeftMember>(
-                                                                             rightTarget, 
-                                                                             leftTarget, 
-                                                                             rightValueConverter, 
-                                                                             setupProcedure == InitialBindingProcedure.ApplyRight
-                                                                             );
+                this,
+                rightTarget, 
+                leftTarget, 
+                rightValueConverter, 
+                setupProcedure == InitialBindingProcedure.ApplyRight
+            );
+            this.Bindings.Add(this.RightBinding);
         }
 
         public override void Enable() {

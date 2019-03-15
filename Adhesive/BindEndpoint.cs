@@ -9,15 +9,15 @@ namespace Adhesive {
     internal class EndpointMember {
 
         public PropertyInfo Property { get; }
-        public List<OneWayBinding> Bindings { get; }
 
-        internal EndpointMember(PropertyInfo property, OneWayBinding binding = null) {
+        private List<OneWayBinding> _targetBindings;
+        public List<OneWayBinding> TargetBindings => _targetBindings ?? (_targetBindings = new List<OneWayBinding>());
+
+        private List<OneWayBinding> _sourceBindings;
+        public List<OneWayBinding> SourceBindings => _sourceBindings ?? (_sourceBindings = new List<OneWayBinding>());
+
+        internal EndpointMember(PropertyInfo property) {
             Property = property;
-
-            if (binding != null)
-                Bindings = new List<OneWayBinding>(new[] { binding });
-            else
-                Bindings = new List<OneWayBinding>();
         }
     }
 
@@ -41,37 +41,37 @@ namespace Adhesive {
             }
         }
 
-        internal PropertyInfo GetCachedMember(MemberInfo member) {
-            EndpointMember cachedMemberInfo;
+        internal PropertyInfo GetMemberAsTarget(MemberInfo member, OneWayBinding binding) {
+            EndpointMember cachedMemberInfo = GetMember(member);
+            cachedMemberInfo.TargetBindings.Add(binding);
+
+            return cachedMemberInfo.Property;
+        }
+
+        internal PropertyInfo GetMemberAsSource(MemberInfo member, OneWayBinding binding) {
+            EndpointMember cachedMemberInfo = GetMember(member);
+            cachedMemberInfo.SourceBindings.Add(binding);
+
+            return cachedMemberInfo.Property;
+        }
+
+        private EndpointMember GetMember(MemberInfo member) {
+            EndpointMember cachedMemberInfo = null;
 
             if (!CachedMembers.ContainsKey(member.Name)) {
                 cachedMemberInfo = new EndpointMember(member as PropertyInfo);
                 CachedMembers.Add(member.Name, cachedMemberInfo);
-            } else {
-                cachedMemberInfo = CachedMembers[member.Name];
             }
 
-            return cachedMemberInfo.Property;
-        }
+            cachedMemberInfo = cachedMemberInfo ?? CachedMembers[member.Name];
 
-        internal PropertyInfo AttachBinding(MemberInfo member, OneWayBinding binding) {
-            EndpointMember cachedMemberInfo;
-
-            if (!CachedMembers.ContainsKey(member.Name)) {
-                cachedMemberInfo = new EndpointMember(member as PropertyInfo, binding);
-                CachedMembers.Add(member.Name, cachedMemberInfo);
-            } else {
-                cachedMemberInfo = CachedMembers[member.Name];
-                cachedMemberInfo.Bindings.Add(binding);
-            }
-
-            return cachedMemberInfo.Property;
+            return cachedMemberInfo;
         }
 
         private void BindableInstanceOnPropertyChanged(object sender, PropertyChangedEventArgs e) {
             if (CachedMembers.TryGetValue(e.PropertyName, out EndpointMember propertyBindings)) {
-                for (int i = 0; i < propertyBindings.Bindings.Count; i++) {
-                    propertyBindings.Bindings[i].Run();
+                for (int i = 0; i < propertyBindings.SourceBindings.Count; i++) {
+                    propertyBindings.SourceBindings[i].Run();
                 }
             }
         }
