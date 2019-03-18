@@ -1,17 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Adhesive {
-    public class ManyToOneBinding:Binding {
-        public override bool Enabled => throw new NotImplementedException();
+    public class ManyToOneBinding<TTargetMember, TSourceMembers>:MultiWayBinding {
+        public override bool Enabled => this.Bindings.TrueForAll(binding => binding.Enabled);
+
+        public ManyToOneBinding(Expression<Func<TTargetMember>> bindTarget, IEnumerable<Expression<Func<TSourceMembers>>> bindSources,  Func<object, TTargetMember> valueConverter = null) {
+            foreach (var bindSource in bindSources) {
+                this.Bindings.Add(
+                    new OneWayBinding<TTargetMember, TSourceMembers>(
+                        bindTarget,
+                        bindSource,
+                        valueConverter,
+                        false
+                    )
+                );
+            }
+        }
 
         public override void Disable() {
-            throw new NotImplementedException();
+            this.Bindings.ForEach(binding => binding.Enable());
         }
 
         public override void Enable() {
-            throw new NotImplementedException();
+            this.Bindings.ForEach(binding => binding.Disable());
         }
     }
 }

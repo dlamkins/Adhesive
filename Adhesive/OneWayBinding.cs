@@ -29,6 +29,13 @@ namespace Adhesive {
             BuildBinding(bindTarget, bindSource, valueConverter, applyLeft);
         }
 
+        /// <summary>
+        /// Create a binding where everytime <paramref name="bindSource"/> changes, <paramref name="bindTarget"/> is updated to reflect the new value.
+        /// </summary>
+        /// <param name="bindTarget">The member that will be set whenever <paramref name="bindSource"/> is changed.</param>
+        /// <param name="bindSource">The monitored member that, when changed, will set the value of the <paramref name="bindTarget"/>.</param>
+        /// <param name="valueConverter">Allows you to manipulate, format, or cast the <paramref name="bindSource"/> before it is applied to <paramref name="bindTarget"/>.</param>
+        /// <param name="applyLeft">If true, the <paramref name="bindTarget"/> is set to the value of the <paramref name="bindSource"/> as soon as the binding is made.</param>
         public OneWayBinding(Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<object, TTargetMember> valueConverter = null, bool applyLeft = false) {
             BuildBinding(bindTarget, bindSource, valueConverter, applyLeft);
         }

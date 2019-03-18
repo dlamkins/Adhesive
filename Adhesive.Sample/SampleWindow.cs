@@ -49,27 +49,29 @@ namespace Adhesive.Sample {
             //                                                               (tbLastName) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}",
             //                                                               //(tbDisplayName) => sampleAdhesive.lastNameTextBox.Text
             //                                                               );
-            var updateDisplayname = new Func<object, string>((tbNamePart) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}");
-            var firstNameBinding = new OneWayBinding<string, string>(
-                                                                          () => sampleAdhesive.displayNameTextBox.Text,
-                                                                          () => sampleAdhesive.firstNameTextBox.Text,
-                                                                          updateDisplayname
-                                                                         );
-            var lastNameBinding = new OneWayBinding<string, string>(
-                                                                          () => sampleAdhesive.displayNameTextBox.Text,
-                                                                          () => sampleAdhesive.lastNameTextBox.Text,
-                                                                          updateDisplayname
-                                                                         );
+            //var updateDisplayname = new Func<object, string>((tbNamePart) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}");
+            //var firstNameBinding = new OneWayBinding<string, string>(
+            //                                                              () => sampleAdhesive.displayNameTextBox.Text,
+            //                                                              () => sampleAdhesive.firstNameTextBox.Text,
+            //                                                              updateDisplayname
+            //                                                             );
+            //var lastNameBinding = new OneWayBinding<string, string>(
+            //                                                              () => sampleAdhesive.displayNameTextBox.Text,
+            //                                                              () => sampleAdhesive.lastNameTextBox.Text,
+            //                                                              updateDisplayname
+            //                                                             );
+
+            
 
             List<Expression<Func<string>>> exampleTargets = new List<Expression<Func<string>>>();
 
             exampleTargets.Add(() => notifyingTextBox1.Text);
             exampleTargets.Add(() => notifyingTextBox2.Text);
+            exampleTargets.Add(() => sampleAdhesive.displayNameTextBox.Text);
+            exampleTargets.Add(() => sampleAdhesive.firstNameTextBox.Text);
+            exampleTargets.Add(() => sampleAdhesive.lastNameTextBox.Text);
 
-            var extraBinding = new OneToManyBinding<string, string>(
-                exampleTargets,
-                () => sampleAdhesive.displayNameTextBox.Text,
-                applyLeft: true);
+            var extraBinding = new SyncBinding<string>(exampleTargets, "TEST - INITIAL");
 
             //_adhesiveBindings.Add(firstNameBinding);
             //_adhesiveBindings.Add(lastNameBinding);
@@ -87,10 +89,10 @@ namespace Adhesive.Sample {
         }
 
         private void SetupPraeclarum() {
-            Libraries.Praeclarum.Bind.Binding.Create(
-                () => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text &&
-                      notifyingTextBox1.Text == samplePraeclarum.displayNameTextBox.Text &&
-                      notifyingTextBox2.Text == samplePraeclarum.displayNameTextBox.Text);
+            //Libraries.Praeclarum.Bind.Binding.Create(
+                //() => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text &&
+                //      notifyingTextBox1.Text == samplePraeclarum.displayNameTextBox.Text &&
+                //      notifyingTextBox2.Text == samplePraeclarum.displayNameTextBox.Text);
         }
 
         private void SetupOnUpdate() {
