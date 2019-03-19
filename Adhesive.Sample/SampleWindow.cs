@@ -7,12 +7,81 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Adhesive.Sample.NotifyingControls;
 
 namespace Adhesive.Sample {
+
+    public class Employee : INotifyPropertyChanged {
+
+        private string _firstName;
+        private string _lastName;
+
+        public string FirstName {
+            get => _firstName;
+            set {
+                if (_firstName == value) return;
+
+                _firstName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string LastName {
+            get => _lastName;
+            set {
+                if (_lastName == value) return;
+
+                _lastName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Employee(string firstName, string lastName) {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+        }
+        
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+    }
+
+    public class Nameplate {
+
+        private string _inscribedName;
+
+        public string InscribedName {
+            get => _inscribedName;
+            set {
+                if (_inscribedName == value) return;
+
+                _inscribedName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+    }
 
     public struct Fullname {
         public string FirstName { get; }
@@ -61,7 +130,35 @@ namespace Adhesive.Sample {
             //                                                              updateDisplayname
             //                                                             );
 
-            
+            var henry = new Employee("Henry", "Johnson");
+            var henrysNameplate = new Nameplate();
+
+            var nameplateBinding = new Adhesive.OneWayBinding<string, string>(() => henrysNameplate.InscribedName,() => henry.FirstName);
+            var nameplateBinding = new Adhesive.TwoWayBinding<string, string>(
+                                                                              () => henry.FirstName, 
+                                                                              () => henrysNameplate.InscribedName, 
+                                                                              o => o.ToString().ToUpper(), 
+                                                                              o => o.ToString().ToLower(), 
+                                                                              InitialBindingProcedure.ApplyRight
+                                                                              );
+
+            var nameplateBinding = new Adhesive.ManyToOneBinding<string, string>(
+                                                                                 () => henrysNameplate.InscribedName,
+                                                                                 new List<Expression<Func<string>>>() {
+                                                                                     () => henry.FirstName,
+                                                                                     () => henry.LastName
+                                                                                 },
+                                                                                 o => $"{henry.LastName}, {henry.FirstName}"
+                                                                                );
+
+            var nameplateBinding = new Adhesive.OneToManyBinding<string, string>(
+                                                                                 new List<Expression<Func<string>>>() {
+                                                                                     () => henry.LastName,
+                                                                                     () => henrysNameplate.InscribedName
+                                                                                 },
+                                                                                 () => henry.FirstName,
+                                                                                 o => o.ToString().Reverse().ToString()
+                                                                                );
 
             List<Expression<Func<string>>> exampleTargets = new List<Expression<Func<string>>>();
 

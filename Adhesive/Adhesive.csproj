@@ -6,10 +6,10 @@
     <Authors>dlamkins</Authors>
     <RepositoryUrl>https://github.com/dlamkins/Adhesive.git</RepositoryUrl>
     <PackageTags>Bind Binding Data Sync</PackageTags>
-    <Version>1.0.0-alpha</Version>
+    <Version>1.0.2-alpha</Version>
     <Description>A fast data binding library that relies exclusively on INotifyPropertyChanged.</Description>
     <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>
