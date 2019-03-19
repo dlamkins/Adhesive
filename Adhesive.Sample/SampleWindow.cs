@@ -49,17 +49,29 @@ namespace Adhesive.Sample {
             //                                                               (tbLastName) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}",
             //                                                               //(tbDisplayName) => sampleAdhesive.lastNameTextBox.Text
             //                                                               );
-            var updateDisplayname = new Func<object, string>((tbNamePart) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}");
-            var firstNameBinding = new OneWayBinding<string, string>(
-                                                                          () => sampleAdhesive.displayNameTextBox.Text,
-                                                                          () => sampleAdhesive.firstNameTextBox.Text,
-                                                                          updateDisplayname
-                                                                         );
-            var lastNameBinding = new OneWayBinding<string, string>(
-                                                                          () => sampleAdhesive.displayNameTextBox.Text,
-                                                                          () => sampleAdhesive.lastNameTextBox.Text,
-                                                                          updateDisplayname
-                                                                         );
+            //var updateDisplayname = new Func<object, string>((tbNamePart) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}");
+            //var firstNameBinding = new OneWayBinding<string, string>(
+            //                                                              () => sampleAdhesive.displayNameTextBox.Text,
+            //                                                              () => sampleAdhesive.firstNameTextBox.Text,
+            //                                                              updateDisplayname
+            //                                                             );
+            //var lastNameBinding = new OneWayBinding<string, string>(
+            //                                                              () => sampleAdhesive.displayNameTextBox.Text,
+            //                                                              () => sampleAdhesive.lastNameTextBox.Text,
+            //                                                              updateDisplayname
+            //                                                             );
+
+            
+
+            List<Expression<Func<string>>> exampleTargets = new List<Expression<Func<string>>>();
+
+            exampleTargets.Add(() => notifyingTextBox1.Text);
+            exampleTargets.Add(() => notifyingTextBox2.Text);
+            exampleTargets.Add(() => sampleAdhesive.displayNameTextBox.Text);
+            exampleTargets.Add(() => sampleAdhesive.firstNameTextBox.Text);
+            exampleTargets.Add(() => sampleAdhesive.lastNameTextBox.Text);
+
+            var extraBinding = new SyncBinding<string>(exampleTargets, "TEST - INITIAL");
 
             //_adhesiveBindings.Add(firstNameBinding);
             //_adhesiveBindings.Add(lastNameBinding);
@@ -67,17 +79,20 @@ namespace Adhesive.Sample {
 
         private void SetupWinBindings() {
             var firstNameBinding = sampleWinForms.displayNameTextBox.DataBindings.Add(
-                                                                                         "Text", 
+                                                                                         "Text",
                                                                                          sampleWinForms,
-                                                                                         "CombinedBindMountPoint", 
-                                                                                         true, 
+                                                                                         "CombinedBindMountPoint",
+                                                                                         true,
                                                                                          DataSourceUpdateMode.OnPropertyChanged
                                                                                          );
             firstNameBinding.Format += delegate(object sender, ConvertEventArgs args) { args.Value = $"{sampleWinForms.lastNameTextBox.Text}, {sampleWinForms.firstNameTextBox.Text}"; };
         }
 
         private void SetupPraeclarum() {
-            Libraries.Praeclarum.Bind.Binding.Create(() => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text);
+            //Libraries.Praeclarum.Bind.Binding.Create(
+                //() => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text &&
+                //      notifyingTextBox1.Text == samplePraeclarum.displayNameTextBox.Text &&
+                //      notifyingTextBox2.Text == samplePraeclarum.displayNameTextBox.Text);
         }
 
         private void SetupOnUpdate() {
@@ -197,17 +212,6 @@ namespace Adhesive.Sample {
             timer.Stop();
             return timer.ElapsedMilliseconds;
         }
-
-        private void button1_Click(object sender, EventArgs e) {
-            var owBinding = new TwoWayBinding<string, string>(
-                                                                       () => notifyingTextBox1.Text,
-                                                                       () => notifyingTextBox2.Text,
-                                                                       (o) => $"{notifyingTextBox2.Text.ToUpper()}",
-                                                                       (o) => $"{notifyingTextBox1.Text.ToLower()}"
-                                                                       //(tb2) => ((NotifyingTextBox)tb2).Text.ToUpper()
-                                                                      );
-            
-        }
-
+        
     }
 }
