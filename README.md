@@ -4,7 +4,7 @@ Adhesive gives you a multi-direction data binding for properties of objects that
 
 ## Requirements
 
-- Any class who's member is used as the source for a binding, must inherit from `INotifyPropertyChanged`.
+- Any class who's member is used as the source for a binding, must implement `INotifyPropertyChanged`.
 - Properties should call `OnPropertyChanged()` when their value has been updated.
 - Properties must not call `OnPropertyChanged()` if they are set to the same value they already are (unless you don't intend on using `TwoWayBindings`).
 
