@@ -96,8 +96,8 @@ Now, if `henry.FirstName` is set to any other value, `henrysNameplate.InscribedN
 var nameplateBinding = new Adhesive.TwoWayBinding<string, string>(
 	() => henry.FirstName, 
 	() => henrysNameplate.InscribedName, 
-	 o => o.ToString().ToUpper(), 
-	 o => o.ToString().ToLower(), 
+	 o => o.ToUpper(), 
+	 o => o.ToLower(), 
 	InitialBindingProcedure.ApplyRight
 );
 ```

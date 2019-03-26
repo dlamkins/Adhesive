@@ -12,7 +12,7 @@ namespace Adhesive {
 
         public override bool Enabled => this.LeftBinding.Enabled && this.RightBinding.Enabled;
 
-        public TwoWayBinding(Expression<Func<TLeftMember>> leftTarget, Expression<Func<TRightMember>> rightTarget, Func<object, TLeftMember> leftValueConverter = null, Func<object, TRightMember> rightValueConverter = null, InitialBindingProcedure setupProcedure = InitialBindingProcedure.ApplyLeft) {
+        public TwoWayBinding(Expression<Func<TLeftMember>> leftTarget, Expression<Func<TRightMember>> rightTarget, Func<TRightMember, TLeftMember> leftValueConverter = null, Func<TLeftMember, TRightMember> rightValueConverter = null, InitialBindingProcedure setupProcedure = InitialBindingProcedure.ApplyLeft) {
             this.LeftBinding = new OneWayBinding<TLeftMember, TRightMember>(
                 this,
                 leftTarget,

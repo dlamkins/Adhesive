@@ -105,19 +105,18 @@ namespace Adhesive.Sample {
         private int _sampleCount = 6;
 
         private void SetupAdhesive() {
-            //var firstNameBinding = new Adhesive.BasicBinding<string, string>(
-            //                                                                 () => sampleAdhesive.displayNameTextBox.Text,
-            //                                                                 () => sampleAdhesive.firstNameTextBox.Text
-            //                                                                 //(tbFirstName) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}",
-            //                                                                 //(tbDisplayName) => sampleAdhesive.firstNameTextBox.Text
-            //                                                                );
+            var firstNameBinding = new Adhesive.OneWayBinding<string, string>(
+                                                                             () => sampleAdhesive.displayNameTextBox.Text,
+                                                                             () => sampleAdhesive.firstNameTextBox.Text,
+                                                                             (tbFirstName) => $"{sampleAdhesive.lastNameTextBox.Text}, {tbFirstName}"
+                                                                            );
 
-            //var lastNameBinding = new Adhesive.BasicBinding<string, string>(
-            //                                                                () => sampleAdhesive.displayNameTextBox.Text,
-            //                                                                () => sampleAdhesive.lastNameTextBox.Text
-            //                                                               (tbLastName) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}",
-            //                                                               //(tbDisplayName) => sampleAdhesive.lastNameTextBox.Text
-            //                                                               );
+            var lastNameBinding = new Adhesive.OneWayBinding<string, string>(
+                                                                             () => sampleAdhesive.displayNameTextBox.Text,
+                                                                             () => sampleAdhesive.lastNameTextBox.Text,
+                                                                             (tbLastName) => $"{tbLastName}, {sampleAdhesive.firstNameTextBox.Text}"
+                                                                            );
+
             //var updateDisplayname = new Func<object, string>((tbNamePart) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}");
             //var firstNameBinding = new OneWayBinding<string, string>(
             //                                                              () => sampleAdhesive.displayNameTextBox.Text,
@@ -130,45 +129,15 @@ namespace Adhesive.Sample {
             //                                                              updateDisplayname
             //                                                             );
 
-            var henry = new Employee("Henry", "Johnson");
-            var henrysNameplate = new Nameplate();
+            //List<Expression<Func<string>>> exampleTargets = new List<Expression<Func<string>>>();
 
-            var nameplateBinding = new Adhesive.OneWayBinding<string, string>(() => henrysNameplate.InscribedName,() => henry.FirstName);
-            var nameplateBinding = new Adhesive.TwoWayBinding<string, string>(
-                                                                              () => henry.FirstName, 
-                                                                              () => henrysNameplate.InscribedName, 
-                                                                              o => o.ToString().ToUpper(), 
-                                                                              o => o.ToString().ToLower(), 
-                                                                              InitialBindingProcedure.ApplyRight
-                                                                              );
+            //exampleTargets.Add(() => notifyingTextBox1.Text);
+            //exampleTargets.Add(() => notifyingTextBox2.Text);
+            //exampleTargets.Add(() => sampleAdhesive.displayNameTextBox.Text);
+            //exampleTargets.Add(() => sampleAdhesive.firstNameTextBox.Text);
+            //exampleTargets.Add(() => sampleAdhesive.lastNameTextBox.Text);
 
-            var nameplateBinding = new Adhesive.ManyToOneBinding<string, string>(
-                                                                                 () => henrysNameplate.InscribedName,
-                                                                                 new List<Expression<Func<string>>>() {
-                                                                                     () => henry.FirstName,
-                                                                                     () => henry.LastName
-                                                                                 },
-                                                                                 o => $"{henry.LastName}, {henry.FirstName}"
-                                                                                );
-
-            var nameplateBinding = new Adhesive.OneToManyBinding<string, string>(
-                                                                                 new List<Expression<Func<string>>>() {
-                                                                                     () => henry.LastName,
-                                                                                     () => henrysNameplate.InscribedName
-                                                                                 },
-                                                                                 () => henry.FirstName,
-                                                                                 o => o.ToString().Reverse().ToString()
-                                                                                );
-
-            List<Expression<Func<string>>> exampleTargets = new List<Expression<Func<string>>>();
-
-            exampleTargets.Add(() => notifyingTextBox1.Text);
-            exampleTargets.Add(() => notifyingTextBox2.Text);
-            exampleTargets.Add(() => sampleAdhesive.displayNameTextBox.Text);
-            exampleTargets.Add(() => sampleAdhesive.firstNameTextBox.Text);
-            exampleTargets.Add(() => sampleAdhesive.lastNameTextBox.Text);
-
-            var extraBinding = new SyncBinding<string>(exampleTargets, "TEST - INITIAL");
+            //var extraBinding = new SyncBinding<string>(exampleTargets, "TEST - INITIAL");
 
             //_adhesiveBindings.Add(firstNameBinding);
             //_adhesiveBindings.Add(lastNameBinding);

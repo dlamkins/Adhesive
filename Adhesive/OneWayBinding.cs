@@ -23,7 +23,7 @@ namespace Adhesive {
 
         public bool IsMemberOfMultiWayBinding => _parentBinding != null;
 
-        public OneWayBinding(MultiWayBinding parentBinding, Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<object, TTargetMember> valueConverter, bool applyLeft) {
+        public OneWayBinding(MultiWayBinding parentBinding, Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<TSourceMember, TTargetMember> valueConverter, bool applyLeft) {
             _parentBinding = parentBinding;
 
             BuildBinding(bindTarget, bindSource, valueConverter, applyLeft);
@@ -36,7 +36,7 @@ namespace Adhesive {
         /// <param name="bindSource">The monitored member that, when changed, will set the value of the <paramref name="bindTarget"/>.</param>
         /// <param name="valueConverter">Allows you to manipulate, format, or cast the <paramref name="bindSource"/> before it is applied to <paramref name="bindTarget"/>.</param>
         /// <param name="applyLeft">If true, the <paramref name="bindTarget"/> is set to the value of the <paramref name="bindSource"/> as soon as the binding is made.</param>
-        public OneWayBinding(Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<object, TTargetMember> valueConverter = null, bool applyLeft = false) {
+        public OneWayBinding(Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<TSourceMember, TTargetMember> valueConverter = null, bool applyLeft = false) {
             BuildBinding(bindTarget, bindSource, valueConverter, applyLeft);
         }
 
@@ -44,7 +44,7 @@ namespace Adhesive {
             _parentBinding = null;
         }
 
-        private void BuildBinding(Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<object, TTargetMember> valueConverter, bool applyLeft) {
+        private void BuildBinding(Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<TSourceMember, TTargetMember> valueConverter, bool applyLeft) {
             _targetReference = bindTarget.Body as MemberExpression;
             _sourceReference = bindSource.Body as MemberExpression;
 
@@ -69,8 +69,10 @@ namespace Adhesive {
                 ApplyToTargetCall = Expression.Lambda<Action>(Expression.Assign(_targetReference, _sourceReference)).Compile();
             } else {
                 // Converter was provided so we package it into an Action to call later
-                var setTargetAction = ExpressionHelper.MakeAssignmentAction<TTargetMember>(_targetProperty.SetMethod, _targetInstance);
-                ApplyToTargetCall = () => setTargetAction.Invoke(valueConverter(_sourceInstance));
+                Action<TTargetMember> setTargetAction = ExpressionHelper.MakeAssignmentAction<TTargetMember>(_targetProperty.SetMethod, _targetInstance);
+                Func<TSourceMember> getSourceFunction = ExpressionHelper.MakeGetFunc<TSourceMember>(_sourceProperty.GetMethod, _sourceInstance);
+
+                ApplyToTargetCall = () => setTargetAction.Invoke(valueConverter(getSourceFunction()));
             }
 
             _sourceInstance.PropertyChanged += (sender, e) => {

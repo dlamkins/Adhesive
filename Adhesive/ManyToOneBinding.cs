@@ -7,7 +7,7 @@ namespace Adhesive {
     public class ManyToOneBinding<TTargetMember, TSourceMembers>:MultiWayBinding {
         public override bool Enabled => this.Bindings.TrueForAll(binding => binding.Enabled);
 
-        public ManyToOneBinding(Expression<Func<TTargetMember>> bindTarget, IEnumerable<Expression<Func<TSourceMembers>>> bindSources,  Func<object, TTargetMember> valueConverter = null) {
+        public ManyToOneBinding(Expression<Func<TTargetMember>> bindTarget, IEnumerable<Expression<Func<TSourceMembers>>> bindSources,  Func<TSourceMembers, TTargetMember> valueConverter = null) {
             foreach (var bindSource in bindSources) {
                 this.Bindings.Add(
                     new OneWayBinding<TTargetMember, TSourceMembers>(

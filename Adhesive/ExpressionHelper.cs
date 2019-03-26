@@ -17,9 +17,14 @@ namespace Adhesive {
             return lambda.Compile().DynamicInvoke();
         }
 
-        public static Action<TSource> MakeAssignmentAction<TSource>(MethodInfo @set, object instance) {
-            var f = (Action<TSource>)Delegate.CreateDelegate(typeof(Action<TSource>), instance, @set);
+        public static Action<TTarget> MakeAssignmentAction<TTarget>(MethodInfo @set, object instance) {
+            var f = (Action<TTarget>)Delegate.CreateDelegate(typeof(Action<TTarget>), instance, @set);
             return t => f(t);
+        }
+
+        public static Func<TSource> MakeGetFunc<TSource>(MethodInfo @get, object instance) {
+            var f = (Func<TSource>)Delegate.CreateDelegate(typeof(Func<TSource>), instance, @get);
+            return f;
         }
 
     }

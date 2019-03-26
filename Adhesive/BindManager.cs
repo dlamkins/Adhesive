@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 
 namespace Adhesive {
-    public class BindManager {
+    public static class BindManager {
 
         private static Dictionary<object, BindEndpoint> BindEndpointCache { get; }
 
