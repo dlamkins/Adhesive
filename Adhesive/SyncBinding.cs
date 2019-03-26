@@ -23,7 +23,6 @@ namespace Adhesive {
         }
 
         public SyncBinding(IEnumerable<Expression<Func<TSyncMember>>> syncMembers) {
-
             InboundBinding = new ManyToOneBinding<TSyncMember, TSyncMember>(
                 () => CentralUpdater,
                 syncMembers
@@ -33,7 +32,6 @@ namespace Adhesive {
                 syncMembers,
                 () => CentralUpdater
             );
-
         }
 
         public SyncBinding(IEnumerable<Expression<Func<TSyncMember>>> syncMembers, TSyncMember initialValue) {
@@ -49,7 +47,6 @@ namespace Adhesive {
                 () => CentralUpdater,
                 applyLeft: true
             );
-
         }
 
         public override void Enable() {

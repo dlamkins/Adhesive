@@ -105,42 +105,17 @@ namespace Adhesive.Sample {
         private int _sampleCount = 6;
 
         private void SetupAdhesive() {
-            var firstNameBinding = new Adhesive.OneWayBinding<string, string>(
-                                                                             () => sampleAdhesive.displayNameTextBox.Text,
-                                                                             () => sampleAdhesive.firstNameTextBox.Text,
-                                                                             (tbFirstName) => $"{sampleAdhesive.lastNameTextBox.Text}, {tbFirstName}"
-                                                                            );
+            var firstNameBinding = Adhesive.Binding.CreateOneWayBinding(
+                                                                         () => sampleAdhesive.displayNameTextBox.Text,
+                                                                         () => sampleAdhesive.firstNameTextBox.Text,
+                                                                         (tbFirstName) => $"{sampleAdhesive.lastNameTextBox.Text}, {tbFirstName}"
+                                                                        );
 
-            var lastNameBinding = new Adhesive.OneWayBinding<string, string>(
-                                                                             () => sampleAdhesive.displayNameTextBox.Text,
-                                                                             () => sampleAdhesive.lastNameTextBox.Text,
-                                                                             (tbLastName) => $"{tbLastName}, {sampleAdhesive.firstNameTextBox.Text}"
-                                                                            );
-
-            //var updateDisplayname = new Func<object, string>((tbNamePart) => $"{sampleAdhesive.lastNameTextBox.Text}, {sampleAdhesive.firstNameTextBox.Text}");
-            //var firstNameBinding = new OneWayBinding<string, string>(
-            //                                                              () => sampleAdhesive.displayNameTextBox.Text,
-            //                                                              () => sampleAdhesive.firstNameTextBox.Text,
-            //                                                              updateDisplayname
-            //                                                             );
-            //var lastNameBinding = new OneWayBinding<string, string>(
-            //                                                              () => sampleAdhesive.displayNameTextBox.Text,
-            //                                                              () => sampleAdhesive.lastNameTextBox.Text,
-            //                                                              updateDisplayname
-            //                                                             );
-
-            //List<Expression<Func<string>>> exampleTargets = new List<Expression<Func<string>>>();
-
-            //exampleTargets.Add(() => notifyingTextBox1.Text);
-            //exampleTargets.Add(() => notifyingTextBox2.Text);
-            //exampleTargets.Add(() => sampleAdhesive.displayNameTextBox.Text);
-            //exampleTargets.Add(() => sampleAdhesive.firstNameTextBox.Text);
-            //exampleTargets.Add(() => sampleAdhesive.lastNameTextBox.Text);
-
-            //var extraBinding = new SyncBinding<string>(exampleTargets, "TEST - INITIAL");
-
-            //_adhesiveBindings.Add(firstNameBinding);
-            //_adhesiveBindings.Add(lastNameBinding);
+            var lastNameBinding = Adhesive.Binding.CreateOneWayBinding(
+                                                                         () => sampleAdhesive.displayNameTextBox.Text,
+                                                                         () => sampleAdhesive.lastNameTextBox.Text,
+                                                                         (tbLastName) => $"{tbLastName}, {sampleAdhesive.firstNameTextBox.Text}"
+                                                                        );
         }
 
         private void SetupWinBindings() {
@@ -155,10 +130,7 @@ namespace Adhesive.Sample {
         }
 
         private void SetupPraeclarum() {
-            //Libraries.Praeclarum.Bind.Binding.Create(
-                //() => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text &&
-                //      notifyingTextBox1.Text == samplePraeclarum.displayNameTextBox.Text &&
-                //      notifyingTextBox2.Text == samplePraeclarum.displayNameTextBox.Text);
+            Libraries.Praeclarum.Bind.Binding.Create(() => samplePraeclarum.displayNameTextBox.Text == samplePraeclarum.lastNameTextBox.Text + ", " + samplePraeclarum.firstNameTextBox.Text);
         }
 
         private void SetupOnUpdate() {

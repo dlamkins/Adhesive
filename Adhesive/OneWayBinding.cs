@@ -23,7 +23,7 @@ namespace Adhesive {
 
         public bool IsMemberOfMultiWayBinding => _parentBinding != null;
 
-        public OneWayBinding(MultiWayBinding parentBinding, Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<TSourceMember, TTargetMember> valueConverter, bool applyLeft) {
+        internal OneWayBinding(MultiWayBinding parentBinding, Expression<Func<TTargetMember>> bindTarget, Expression<Func<TSourceMember>> bindSource, Func<TSourceMember, TTargetMember> valueConverter, bool applyLeft) {
             _parentBinding = parentBinding;
 
             BuildBinding(bindTarget, bindSource, valueConverter, applyLeft);
