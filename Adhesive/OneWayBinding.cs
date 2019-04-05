@@ -101,6 +101,24 @@ namespace Adhesive {
             _enabled = false;
         }
 
+        protected override void OnBroken() {
+            if (IsMemberOfMultiWayBinding) {
+                // TODO: Determine what should happen to parent bindings of now broken OneWayBindings
+            }
+
+            // Clear object references ASAP
+            _targetReference = null;
+            _sourceReference = null;
+
+            _targetInstance = null;
+            _sourceInstance = null;
+
+            _targetProperty = null;
+            _sourceProperty = null;
+
+            ApplyToTargetCall = null;
+        }
+
     }
 
     public abstract class OneWayBinding : Binding {

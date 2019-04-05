@@ -55,6 +55,7 @@
     <Compile Include="NotifyingControls\NotifyingTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="NotifyingControls\TestObject.cs" />
     <Compile Include="SampleControls\BindBenchmark\StandardControlGroupings.cs">
       <SubType>UserControl</SubType>
     </Compile>

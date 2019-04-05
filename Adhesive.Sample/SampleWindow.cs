@@ -196,17 +196,23 @@ namespace Adhesive.Sample {
         }
 
         private void bttnWinFormsStart_Click(object sender, EventArgs e) {
-            bttnWinFormsStart.Enabled = false;
+            //bttnWinFormsStart.Enabled = false;
 
-            long totalRuntime = 0;
+            //long totalRuntime = 0;
 
-            for (int i = 0; i < _sampleCount; i++) {
-                lblWinFormsResults.Text =  $"Samples Completed{Environment.NewLine}{i}/{_sampleCount}";
-                totalRuntime           += DoBenchmark(sampleWinForms);
+            //for (int i = 0; i < _sampleCount; i++) {
+            //    lblWinFormsResults.Text =  $"Samples Completed{Environment.NewLine}{i}/{_sampleCount}";
+            //    totalRuntime           += DoBenchmark(sampleWinForms);
+            //}
+
+            //lblWinFormsResults.Text = $"Average of{Environment.NewLine}{totalRuntime / _sampleCount}ms{Environment.NewLine}over {_sampleCount} samples (x{_names.Count} entries)";
+            //bttnWinFormsStart.Enabled = true;
+
+            sampleOnEvent.lastNameTextBox.Dispose();
+
+            if (sampleOnEvent.lastNameTextBox != null) {
+                bttnWinFormsStart.BackColor = Color.Red;
             }
-
-            lblWinFormsResults.Text = $"Average of{Environment.NewLine}{totalRuntime / _sampleCount}ms{Environment.NewLine}over {_sampleCount} samples (x{_names.Count} entries)";
-            bttnWinFormsStart.Enabled = true;
         }
 
         private void bttnUpdateOnEventStart_Click(object sender, EventArgs e) {

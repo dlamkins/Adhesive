@@ -5,12 +5,26 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace Adhesive {
-    public abstract class Binding : INotifyPropertyChanged {
+    public abstract class Binding : INotifyPropertyChanged, IDisposable {
+
+        public bool Broken { get; private set; }
 
         public abstract bool Enabled { get; }
 
         public abstract void Enable();
         public abstract void Disable();
+
+        protected virtual void OnBroken() { }
+
+        public void Break() {
+            if (this.Broken)
+                return;
+
+            this.Disable();
+            this.OnBroken();
+            this.Broken = true;
+            this.Dispose();
+        }
 
         #region Binding Builders
 
@@ -55,6 +69,12 @@ namespace Adhesive {
         #endregion
 
         #endregion
+
+        public void Dispose() {
+            // We don't have any unmanaged code to clean up, so just break the binding
+            this.Break();
+            GC.SuppressFinalize(this);
+        }
 
         #region INotifyPropertyChanged
 

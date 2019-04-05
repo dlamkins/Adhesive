@@ -19,20 +19,21 @@ namespace Adhesive {
         internal EndpointMember(PropertyInfo property) {
             Property = property;
         }
+
     }
 
     public class BindEndpoint {
 
-        private object _bindInstance;
+        private WeakReference _bindReference;
 
         public bool Bindable { get; }
 
         internal Dictionary<string, EndpointMember> CachedMembers { get; }
 
         internal BindEndpoint(object bindSource) {
-            _bindInstance = bindSource;
+            _bindReference = new WeakReference(bindSource, false);
 
-            if (_bindInstance is INotifyPropertyChanged bindableInstance) {
+            if (bindSource is INotifyPropertyChanged bindableInstance) {
                 this.Bindable = true;
                 
                 CachedMembers = new Dictionary<string, EndpointMember>();
@@ -53,6 +54,14 @@ namespace Adhesive {
             cachedMemberInfo.SourceBindings.Add(binding);
 
             return cachedMemberInfo.Property;
+        }
+
+        internal void RemoveTargetBinding(MemberInfo member, OneWayBinding binding) {
+
+        }
+
+        internal void RemoveSourceBinding(MemberInfo member, OneWayBinding binding) {
+
         }
 
         private EndpointMember GetMember(MemberInfo member) {
